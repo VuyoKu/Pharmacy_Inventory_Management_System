@@ -1,4 +1,4 @@
-package pims_system;
+// main enrty point for the PIMS system
 import javax.swing.*;
 
 public class Main{
