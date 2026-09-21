@@ -1,12 +1,11 @@
 package authenication;
 // imports from other packages/folders
-import utilities.UITheme;
-import utilities.SessionManager;
-
+import admin.AdminDashboard;
+import cashier.CashierDashboard;
 import database_connection.db_con;
 import models.User;
-
-
+import utilities.SessionManager;
+import utilities.UITheme;
 
 
 // imports of java libraries
@@ -14,6 +13,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.sql.*;
+
 
 public class LoginFrame extends JFrame{
 
@@ -142,7 +142,43 @@ public class LoginFrame extends JFrame{
             return;
         }
 
-        
+        try {
+            Connection conn = db_con.getConnection();
+            String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, username);
+            ps.setString(2, password);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                User user = new User(
+                    rs.getInt("user_id"),
+                    rs.getString("username"),
+                    rs.getString("password"),
+                    rs.getString("role"),
+                    rs.getString("full_name")
+                );
+                SessionManager.setCurrentUser(user);
+                dispose();
+                if ("Admin".equals(user.getRole())) {
+                    new AdminDashboard();
+                } else {
+                    new CashierDashboard();
+                }
+            } else {
+                failedAttempts++;
+                messageLabel.setText("✘  Invalid credentials. Attempt " + failedAttempts + "/3");
+                passwordField.setText("");
+                if (failedAttempts >= 3) {
+                    messageLabel.setText("✘  Too many failed attempts. Please contact admin.");
+                    usernameField.setEnabled(false);
+                    passwordField.setEnabled(false);
+                }
+            }
+        } catch (SQLException ex) {
+            messageLabel.setText("✘  Database error: " + ex.getMessage());
+            ex.printStackTrace();
+        }
         
     }
 
