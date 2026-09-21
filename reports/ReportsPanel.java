@@ -34,8 +34,7 @@ public class ReportsPanel extends JPanel {
         add(tabs, BorderLayout.CENTER);
     }
 
-    // ── 1. Sales Report ──────────────────────────────────────
-
+    // 1. Sales Report
     private JPanel buildSalesReport() {
         JPanel panel = new JPanel(new BorderLayout(0, 8));
         panel.setBackground(UITheme.BG);
@@ -67,6 +66,7 @@ public class ReportsPanel extends JPanel {
         totalLabel.setForeground(UITheme.PRIMARY);
         totalLabel.setBorder(new EmptyBorder(6, 0, 0, 0));
 
+        // Show all sales, or fetch only the date range selected by the user
         Runnable loadAll = () -> loadSalesData(model, null, null, totalLabel);
         allBtn.addActionListener(e -> loadAll.run());
         runBtn.addActionListener(e ->
@@ -123,7 +123,7 @@ public class ReportsPanel extends JPanel {
         }
     }
 
-    // ── 2. Item-Wise Sales ───────────────────────────────────
+    // 2. Item-Wise Sales
 
     private JPanel buildItemWiseReport() {
         JPanel panel = new JPanel(new BorderLayout(0, 8));
@@ -186,7 +186,7 @@ public class ReportsPanel extends JPanel {
         return panel;
     }
 
-    // ── 3. Low Stock Alert ───────────────────────────────────
+    // 3. Low Stock Alert
 
     private JPanel buildLowStockReport() {
         JPanel panel = new JPanel(new BorderLayout(0, 8));
@@ -208,6 +208,7 @@ public class ReportsPanel extends JPanel {
         JTable table = new JTable(model);
         UITheme.styleTable(table);
 
+        // Reload the low-stock report with medicines that need replenishment
         Runnable run = () -> {
             model.setRowCount(0);
             try {
@@ -267,6 +268,7 @@ public class ReportsPanel extends JPanel {
         JTable table = new JTable(model);
         UITheme.styleTable(table);
 
+        // Reload the expiry report for medicines expiring soon
         Runnable run = () -> {
             model.setRowCount(0);
             try {

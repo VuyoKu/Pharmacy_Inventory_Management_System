@@ -27,6 +27,7 @@ public class SupplierPanel extends JPanel {
         loadData();
     }
 
+    // Build the user interface for the SupplierPanel, including the toolbar with buttons and the table to display supplier data.
     private void buildUI() {
         JPanel toolbar = new JPanel(new BorderLayout(12, 0));
         toolbar.setBackground(UITheme.BG);
@@ -34,7 +35,7 @@ public class SupplierPanel extends JPanel {
         toolbar.add(UITheme.headingLabel("🏭  Supplier Management"), BorderLayout.WEST);
 
         JPanel btns = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
-        btns.setOpaque(false);
+        btns.setOpaque(false); // Transparent background for the button panel
         JButton addBtn    = UITheme.successButton("+ Add Supplier");
         JButton editBtn   = UITheme.primaryButton("✎ Edit");
         JButton delBtn    = UITheme.dangerButton("✖ Delete");
@@ -45,9 +46,13 @@ public class SupplierPanel extends JPanel {
         delBtn.addActionListener(e -> deleteSelected());
         refreshBtn.addActionListener(e -> loadData());
 
-        btns.add(addBtn); btns.add(editBtn); btns.add(delBtn); btns.add(refreshBtn);
+        btns.add(addBtn); 
+        btns.add(editBtn); 
+        btns.add(delBtn); 
+        btns.add(refreshBtn);
         toolbar.add(btns, BorderLayout.EAST);
 
+        // Initialize the table model and JTable for displaying supplier data, and apply styling to the table.
         model = new DefaultTableModel(COLS, 0) {
             @Override public boolean isCellEditable(int r, int c) { return false; }
         };
@@ -85,12 +90,14 @@ public class SupplierPanel extends JPanel {
         }
     }
 
+    // Edit the selected supplier record in the table by opening a dialog with pre-filled data for editing.
     private void editSelected() {
         int row = table.getSelectedRow();
         if (row < 0) { JOptionPane.showMessageDialog(this, "Select a supplier first."); return; }
         openDialog(suppliers.get(row));
     }
 
+    // Delete the selected supplier record from the database after confirming with the user, and refresh the table to reflect the changes.
     private void deleteSelected() {
         int row = table.getSelectedRow();
         if (row < 0) { JOptionPane.showMessageDialog(this, "Select a supplier first."); return; }
@@ -110,6 +117,7 @@ public class SupplierPanel extends JPanel {
         }
     }
 
+    // Open a dialog for adding a new supplier or editing an existing one, with form fields for the supplier details.
     private void openDialog(Supplier existing) {
         boolean isEdit = (existing != null);
         JDialog dlg = new JDialog((Frame) SwingUtilities.getWindowAncestor(this),
@@ -140,6 +148,7 @@ public class SupplierPanel extends JPanel {
             addrF.setText(existing.getAddress());
         }
 
+        // Add form labels and input fields to the dialog using a grid layout, ensuring proper alignment and spacing.
         String[] labels = {"Company Name *", "Contact Person", "Phone *", "Email", "Address"};
         JComponent[] comps = {nameF, contactF, phoneF, emailF, new JScrollPane(addrF)};
         for (int i = 0; i < labels.length; i++) {
@@ -149,7 +158,7 @@ public class SupplierPanel extends JPanel {
             content.add(comps[i], g);
         }
 
-        JButton saveBtn   = UITheme.successButton(isEdit ? "Update" : "Save");
+        JButton saveBtn   = UITheme.successButton(isEdit ? "Update" : "Save"); 
         JButton cancelBtn = UITheme.dangerButton("Cancel");
         saveBtn.addActionListener(e -> {
             if (nameF.getText().trim().isEmpty() || phoneF.getText().trim().isEmpty()) {
@@ -172,7 +181,7 @@ public class SupplierPanel extends JPanel {
                     ps.setString(5, addrF.getText().trim());
                     ps.executeUpdate();
                 }
-                dlg.dispose(); loadData();
+                dlg.dispose(); loadData(); // Refresh the table to reflect the changes after adding or updating a supplier
                 JOptionPane.showMessageDialog(this, isEdit ? "Supplier updated!" : "Supplier added!");
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(dlg, "Error: " + ex.getMessage());

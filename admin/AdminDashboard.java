@@ -15,6 +15,10 @@ import java.util.Date;
 
 public class AdminDashboard extends JFrame {
 
+    // the panel in the middle that shows whichever screen is picked
+    private JPanel contentArea;
+    private CardLayout contentLayout;
+
     public AdminDashboard() {
         setTitle("HealthFirst PIMS – Admin Dashboard");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -27,24 +31,27 @@ public class AdminDashboard extends JFrame {
         JPanel root = new JPanel(new BorderLayout(0, 0));
         root.setBackground(UITheme.BG);
 
-        // Top Header 
+        // Top Header
         JPanel header = buildHeader();
         root.add(header, BorderLayout.NORTH);
 
-        // Tabbed Content
-        JTabbedPane tabs = new JTabbedPane(JTabbedPane.LEFT);
-        tabs.setFont(UITheme.FONT_BOLD);
-        tabs.setBackground(UITheme.SIDEBAR_BG);
-        tabs.setForeground(UITheme.SIDEBAR_TEXT);
+        // Sidebar menu on the left (instead of a JTabbedPane)
+        JPanel sidebar = buildSidebar();
+        root.add(sidebar, BorderLayout.WEST);
 
-        tabs.addTab("Dashboard", buildHomePanel());
+        // Content area in the middle. CardLayout lets us "flip" between
+        // panels without removing/adding components manually.
+        contentLayout = new CardLayout();
+        contentArea = new JPanel(contentLayout);
+        contentArea.setBackground(UITheme.BG);
 
-        tabs.addTab("Medicines", new MedicinePanel());
-        tabs.addTab("Suppliers", new SupplierPanel());
-        tabs.addTab("Users", new UserPanel());
-        tabs.addTab("Reports", new ReportsPanel());
+        contentArea.add(buildHomePanel(),      "HOME");
+        contentArea.add(new MedicinePanel(),   "MEDICINES");
+        contentArea.add(new SupplierPanel(),   "SUPPLIERS");
+        contentArea.add(new UserPanel(),       "USERS");
+        contentArea.add(new ReportsPanel(),    "REPORTS");
 
-        root.add(tabs, BorderLayout.CENTER);
+        root.add(contentArea, BorderLayout.CENTER);
         setContentPane(root);
     }
 
@@ -55,7 +62,7 @@ public class AdminDashboard extends JFrame {
         header.setPreferredSize(new Dimension(0, 65));
 
         JLabel title = new JLabel("HealthFirst Pharmacy Inventory Management");
-        title.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        title.setFont(new Font(UITheme.FONT_FAMILY, Font.BOLD, 18));
         title.setForeground(Color.WHITE);
 
         JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT, 16, 0));
@@ -81,6 +88,56 @@ public class AdminDashboard extends JFrame {
         header.add(title, BorderLayout.WEST);
         header.add(right, BorderLayout.EAST);
         return header;
+    }
+
+    // builds a simple vertical menu of buttons that switch the content area
+    private JPanel buildSidebar() {
+        JPanel sidebar = new JPanel();
+        sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
+        sidebar.setBackground(UITheme.SIDEBAR_BG);
+        sidebar.setPreferredSize(new Dimension(190, 0));
+        sidebar.setBorder(new EmptyBorder(20, 12, 20, 12));
+
+        JButton homeBtn      = sidebarButton("Dashboard");
+        JButton medicineBtn  = sidebarButton("Medicines");
+        JButton supplierBtn  = sidebarButton("Suppliers");
+        JButton userBtn      = sidebarButton("Users");
+        JButton reportBtn    = sidebarButton("Reports");
+
+        homeBtn.addActionListener(e -> contentLayout.show(contentArea, "HOME"));
+        medicineBtn.addActionListener(e -> contentLayout.show(contentArea, "MEDICINES"));
+        supplierBtn.addActionListener(e -> contentLayout.show(contentArea, "SUPPLIERS"));
+        userBtn.addActionListener(e -> contentLayout.show(contentArea, "USERS"));
+        reportBtn.addActionListener(e -> contentLayout.show(contentArea, "REPORTS"));
+
+        sidebar.add(homeBtn);
+        sidebar.add(Box.createVerticalStrut(10));
+        sidebar.add(medicineBtn);
+        sidebar.add(Box.createVerticalStrut(10));
+        sidebar.add(supplierBtn);
+        sidebar.add(Box.createVerticalStrut(10));
+        sidebar.add(userBtn);
+        sidebar.add(Box.createVerticalStrut(10));
+        sidebar.add(reportBtn);
+        sidebar.add(Box.createVerticalGlue());
+
+        return sidebar;
+    }
+
+    // small helper so every sidebar button looks the same
+    private JButton sidebarButton(String text) {
+        JButton btn = new JButton(text);
+        btn.setFont(UITheme.FONT_BOLD);
+        btn.setForeground(Color.WHITE);
+        btn.setBackground(UITheme.PRIMARY);
+        btn.setFocusPainted(false);
+        btn.setBorderPainted(false);
+        btn.setHorizontalAlignment(SwingConstants.LEFT);
+        btn.setAlignmentX(Component.LEFT_ALIGNMENT);
+        btn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
+        btn.setBorder(new EmptyBorder(10, 14, 10, 14));
+        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        return btn;
     }
 
     private JPanel buildHomePanel() {
@@ -125,7 +182,7 @@ public class AdminDashboard extends JFrame {
         card.setBorder(new EmptyBorder(20, 24, 20, 24));
 
         JLabel valueLabel = new JLabel(value);
-        valueLabel.setFont(new Font("Segoe UI", Font.BOLD, 34));
+        valueLabel.setFont(new Font(UITheme.FONT_FAMILY, Font.BOLD, 34));
         valueLabel.setForeground(color);
 
         JLabel nameLabel = new JLabel(label);

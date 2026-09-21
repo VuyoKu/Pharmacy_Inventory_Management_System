@@ -19,9 +19,12 @@ public class BillWindow extends JDialog {
     private final BigDecimal total;
     private final String cashierName;
 
+    // Constructor for the BillWindow, 
+    // which initializes the dialog with sale details, 
+    // builds the user interface, and displays the window.
     public BillWindow(int saleId, List<SaleItem> items, BigDecimal total,
                       String cashierName, Component parent) {
-        super(SwingUtilities.getWindowAncestor(parent), "Bill – Sale #" + saleId,
+        super(SwingUtilities.getWindowAncestor(parent), "Bill – Sale #" + saleId, 
               ModalityType.APPLICATION_MODAL);
         this.saleId     = saleId;
         this.items      = items;
@@ -38,20 +41,21 @@ public class BillWindow extends JDialog {
         outer.setBackground(UITheme.BG);
         outer.setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        // ── Receipt panel ─────────────────────────────────────
+        // Receipt panel
         JPanel receipt = new JPanel();
         receipt.setLayout(new BoxLayout(receipt, BoxLayout.Y_AXIS));
         receipt.setBackground(Color.WHITE);
         receipt.setBorder(new EmptyBorder(24, 28, 24, 28));
 
         // Header
-        addCentredLabel(receipt, "💊  HealthFirst Pharmacy", new Font("Segoe UI", Font.BOLD, 18), UITheme.PRIMARY);
+        addCentredLabel(receipt, "HealthFirst Pharmacy", new Font("Segoe UI", Font.BOLD, 18), UITheme.PRIMARY);
         addCentredLabel(receipt, "123 Main Street, Johannesburg, SA", UITheme.FONT_SMALL, UITheme.TEXT_MUTED);
         addCentredLabel(receipt, "Tel: 011-123-4567 | healthfirst@pharmacy.co.za", UITheme.FONT_SMALL, UITheme.TEXT_MUTED);
         receipt.add(separator());
         addCentredLabel(receipt, "TAX INVOICE / RECEIPT", UITheme.FONT_BOLD, UITheme.PRIMARY);
         receipt.add(Box.createVerticalStrut(4));
 
+        // Sale details
         String dateStr = new SimpleDateFormat("dd MMM yyyy  HH:mm:ss").format(new Date());
         addCentredLabel(receipt, "Date: " + dateStr, UITheme.FONT_SMALL, UITheme.TEXT_MUTED);
         addCentredLabel(receipt, "Sale ID: #" + saleId, UITheme.FONT_SMALL, UITheme.TEXT_MUTED);
@@ -98,6 +102,7 @@ public class BillWindow extends JDialog {
         totalRow.add(totVal, BorderLayout.EAST);
         receipt.add(totalRow);
 
+        // Footer
         receipt.add(separator());
         addCentredLabel(receipt, "Items: " + items.size(), UITheme.FONT_SMALL, UITheme.TEXT_MUTED);
         receipt.add(Box.createVerticalStrut(12));
@@ -109,7 +114,7 @@ public class BillWindow extends JDialog {
         JScrollPane scroll = new JScrollPane(receipt);
         scroll.setBorder(BorderFactory.createLineBorder(UITheme.BORDER_COLOR));
 
-        // ── Buttons ───────────────────────────────────────────
+        // Buttons
         JPanel btns = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 0));
         btns.setOpaque(false);
 
@@ -128,7 +133,7 @@ public class BillWindow extends JDialog {
         setContentPane(outer);
     }
 
-    // ── Helpers ───────────────────────────────────────────────
+    // Helpers 
 
     private void addCentredLabel(JPanel p, String text, Font font, Color color) {
         JLabel l = new JLabel(text);
@@ -139,6 +144,7 @@ public class BillWindow extends JDialog {
         p.add(l);
     }
 
+    // Helper method to create a horizontal separator with a specified maximum height and color.
     private JSeparator separator() {
         JSeparator s = new JSeparator();
         s.setMaximumSize(new Dimension(Integer.MAX_VALUE, 10));
@@ -146,6 +152,7 @@ public class BillWindow extends JDialog {
         return s;
     }
 
+    // Helper method to create a thin horizontal separator with a specified maximum height and color.
     private JSeparator thinSeparator() {
         JSeparator s = new JSeparator();
         s.setMaximumSize(new Dimension(Integer.MAX_VALUE, 6));
@@ -153,6 +160,7 @@ public class BillWindow extends JDialog {
         return s;
     }
 
+    // Helper method to create a bold JLabel with specified text, font, and color.
     private JLabel boldLabel(String t) {
         JLabel l = new JLabel(t);
         l.setFont(UITheme.FONT_BOLD);
@@ -160,12 +168,14 @@ public class BillWindow extends JDialog {
         return l;
     }
 
+    // Helper method to create a right-aligned JLabel with specified text, font, and color.
     private JLabel rightLabel(String t) {
         JLabel l = boldLabel(t);
         l.setHorizontalAlignment(SwingConstants.RIGHT);
         return l;
     }
 
+    //  Helper method to create a small JLabel with specified text, font, and color.
     private JLabel smallLabel(String t) {
         JLabel l = new JLabel(t);
         l.setFont(UITheme.FONT_SMALL);
@@ -173,14 +183,17 @@ public class BillWindow extends JDialog {
         return l;
     }
 
+    // Helper method to create a right-aligned small JLabel with specified text, font, and color.
     private JLabel rightSmall(String t) {
         JLabel l = smallLabel(t);
         l.setHorizontalAlignment(SwingConstants.RIGHT);
         return l;
     }
 
+    // Method to print the receipt panel using the system's printer, scaling it to fit the printable area.  
     private void printReceipt(JPanel receipt) {
         PrinterJob job = PrinterJob.getPrinterJob();
+        // Set the printable content to the receipt panel, scaling it to fit the printable area of the page.
         job.setPrintable((g, pf, page) -> {
             if (page > 0) return Printable.NO_SUCH_PAGE;
             Graphics2D g2 = (Graphics2D) g;
@@ -192,6 +205,7 @@ public class BillWindow extends JDialog {
             receipt.printAll(g2);
             return Printable.PAGE_EXISTS;
         });
+        // Show the print dialog to the user, and if they confirm, proceed with printing the receipt.
         if (job.printDialog()) {
             try { job.print(); }
             catch (PrinterException ex) {
@@ -200,6 +214,7 @@ public class BillWindow extends JDialog {
         }
     }
 
+    // Method to save the receipt as a text file, formatting the sale details into a structured string and allowing the user to choose the save location.
     private void saveReceipt() {
         StringBuilder sb = new StringBuilder();
         String line = "=".repeat(50);
@@ -224,6 +239,7 @@ public class BillWindow extends JDialog {
         sb.append("=".repeat(50)).append("\n");
         sb.append("Thank you for shopping at HealthFirst!\n");
 
+        // Show a file chooser dialog to allow the user to select the location and name for saving the receipt text file.
         JFileChooser fc = new JFileChooser();
         fc.setSelectedFile(new java.io.File("Bill_Sale_" + saleId + ".txt"));
         if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {

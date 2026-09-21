@@ -22,6 +22,7 @@ public class MedicinePanel extends JPanel {
     private JTextField searchField;
     private List<Medicine> medicines = new ArrayList<>();
 
+    // Column names for the medicine inventory table
     private static final String[] COLS = {
         "ID", "Name", "Company", "Type", "Price (R)", "In Stock", "Reorder Lvl", "Expiry", "Supplier"
     };
@@ -72,6 +73,7 @@ public class MedicinePanel extends JPanel {
         toolbar.add(btnPanel, BorderLayout.EAST);
 
         // Table 
+        // Create the medicines table and size key columns
         model = new DefaultTableModel(COLS, 0) {
             @Override public boolean isCellEditable(int r, int c) { return false; }
         };
@@ -90,6 +92,7 @@ public class MedicinePanel extends JPanel {
         add(scroll, BorderLayout.CENTER);
     }
 
+    // Fetch all medicines from the database and populate the inventory table
     public void loadData() {
         medicines.clear();
         model.setRowCount(0);
@@ -117,6 +120,7 @@ public class MedicinePanel extends JPanel {
         }
     }
 
+    // Search and filter medicine records based on the search query entered in the search field.
     private void searchMedicines() {
         String q = searchField.getText().trim();
         if (q.isEmpty()) { loadData(); return; }
@@ -150,6 +154,7 @@ public class MedicinePanel extends JPanel {
         }
     }
 
+    // Map a ResultSet row to a Medicine object
     private Medicine mapRow(ResultSet rs) throws SQLException {
         Medicine m = new Medicine();
         m.setMedicineId(rs.getInt("medicine_id"));
@@ -165,12 +170,14 @@ public class MedicinePanel extends JPanel {
         return m;
     }
 
+    // Edit the selected medicine record in the table
     private void editSelected() {
         int row = table.getSelectedRow();
         if (row < 0) { JOptionPane.showMessageDialog(this, "Please select a medicine to edit."); return; }
         openAddEditDialog(medicines.get(row));
     }
 
+    // Delete the selected medicine record from the database and update the table
     private void deleteSelected() {
         int row = table.getSelectedRow();
         if (row < 0) { JOptionPane.showMessageDialog(this, "Please select a medicine to delete."); return; }
@@ -191,6 +198,7 @@ public class MedicinePanel extends JPanel {
         }
     }
 
+    // Open a dialog for adding a new medicine or editing an existing one, with form fields for the medicine details.
     private void openAddEditDialog(Medicine existing) {
         boolean isEdit = (existing != null);
         JDialog dlg = new JDialog((Frame) SwingUtilities.getWindowAncestor(this),
@@ -254,6 +262,7 @@ public class MedicinePanel extends JPanel {
         JButton saveBtn   = UITheme.successButton(isEdit ? "Update" : "Save");
         JButton cancelBtn = UITheme.dangerButton("Cancel");
 
+        // Action listener for the save button, which validates input fields, constructs a SQL query to insert or update the medicine record in the database, and refreshes the table upon success.
         saveBtn.addActionListener(e -> {
             if (nameF.getText().trim().isEmpty() || priceF.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(dlg, "Name and Price are required."); return;
@@ -309,6 +318,7 @@ public class MedicinePanel extends JPanel {
         dlg.setVisible(true);
     }
 
+    // Load suppliers from the database and populate the supplier combo box in the add/edit medicine dialog.
     private void loadSuppliers(JComboBox<String> combo) {
         try {
             ResultSet rs = db_con.getConnection()

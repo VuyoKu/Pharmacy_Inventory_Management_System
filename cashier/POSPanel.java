@@ -37,7 +37,7 @@ public class POSPanel extends JPanel {
     }
 
     private void buildUI() {
-        // ── Top: search/add bar ───────────────────────────────
+        // Top: search/add bar 
         JPanel topBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 10));
         topBar.setBackground(UITheme.CARD_BG);
         topBar.setBorder(new EmptyBorder(8, 12, 8, 12));
@@ -50,7 +50,7 @@ public class POSPanel extends JPanel {
         qtyField.setText("1");
         qtyField.setPreferredSize(new Dimension(60, 34));
 
-        JButton addToCartBtn = UITheme.successButton("Add to Cart ➕");
+        JButton addToCartBtn = UITheme.successButton("Add to Cart");
         addToCartBtn.addActionListener(e -> addToCart());
 
         JButton checkStockBtn = UITheme.primaryButton("Check Stock");
@@ -64,7 +64,7 @@ public class POSPanel extends JPanel {
         topBar.add(Box.createHorizontalStrut(20));
         topBar.add(checkStockBtn);
 
-        // ── Cart Table ────────────────────────────────────────
+        // Cart Table 
         cartModel = new DefaultTableModel(CART_COLS, 0) {
             @Override public boolean isCellEditable(int r, int c) { return false; }
         };
@@ -77,7 +77,7 @@ public class POSPanel extends JPanel {
             "  Shopping Cart", 0, 0, UITheme.FONT_BOLD, UITheme.PRIMARY));
         cartScroll.getViewport().setBackground(UITheme.CARD_BG);
 
-        // ── Bottom action bar ─────────────────────────────────
+        // Bottom action bar
         JPanel bottomBar = new JPanel(new BorderLayout(12, 0));
         bottomBar.setBackground(UITheme.CARD_BG);
         bottomBar.setBorder(new EmptyBorder(12, 20, 12, 20));
@@ -109,6 +109,7 @@ public class POSPanel extends JPanel {
         add(bottomBar,  BorderLayout.SOUTH);
     }
 
+    // Load available medicines from the database into the medicines list and populate the medicineCombo dropdown with their details.
     private void loadMedicines() {
         medicines.clear();
         medicineCombo.removeAllItems();
@@ -134,6 +135,7 @@ public class POSPanel extends JPanel {
         }
     }
 
+    // Add the selected medicine and quantity to the cart, checking for stock availability and updating the cart table accordingly.
     private void addToCart() {
         int idx = medicineCombo.getSelectedIndex();
         if (idx < 0) { JOptionPane.showMessageDialog(this, "Please select a medicine."); return; }
@@ -171,6 +173,7 @@ public class POSPanel extends JPanel {
         refreshCartTable();
     }
 
+    // Refresh the cart table to display the current items in the cart, calculating the total amount and updating the totalLabel accordingly.
     private void refreshCartTable() {
         cartModel.setRowCount(0);
         BigDecimal total = BigDecimal.ZERO;
@@ -188,6 +191,7 @@ public class POSPanel extends JPanel {
         totalLabel.setText("Total: R " + String.format("%.2f", total));
     }
 
+    // Find the index of a medicine in the medicines list by its ID, returning -1 if not found.
     private int findMedicineIndex(int medicineId) {
         for (int i = 0; i < medicines.size(); i++) {
             if (medicines.get(i).getMedicineId() == medicineId) return i;
@@ -195,6 +199,7 @@ public class POSPanel extends JPanel {
         return -1;
     }
 
+    // Remove the selected item from the cart, updating the cart table and total amount accordingly. If no item is selected, show a message prompting the user to select an item first.
     private void removeSelected() {
         int row = cartTable.getSelectedRow();
         if (row < 0) { JOptionPane.showMessageDialog(this, "Select an item to remove."); return; }
@@ -202,6 +207,7 @@ public class POSPanel extends JPanel {
         refreshCartTable();
     }
 
+    // Clear all items from the cart after confirming with the user, and refresh the cart table to reflect the changes.
     private void clearCart() {
         if (cart.isEmpty()) return;
         int c = JOptionPane.showConfirmDialog(this, "Clear all items from cart?",
@@ -212,6 +218,7 @@ public class POSPanel extends JPanel {
         }
     }
 
+    // Check the stock and details of the selected medicine, displaying the information in a message dialog. If no medicine is selected, prompt the user to select one first.
     private void checkStock() {
         int idx = medicineCombo.getSelectedIndex();
         if (idx < 0) { JOptionPane.showMessageDialog(this, "Select a medicine first."); return; }
@@ -227,6 +234,7 @@ public class POSPanel extends JPanel {
             "Stock Information", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    // Checkout the items in the cart, creating a sale record in the database, updating stock quantities, and generating a bill for the transaction. If the cart is empty, prompt the user to add items first.
     private void checkout() {
         if (cart.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Cart is empty. Add items first."); return;

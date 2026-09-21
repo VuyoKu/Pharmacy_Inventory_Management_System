@@ -66,11 +66,13 @@ public class StockCheckPanel extends JPanel {
         add(note,    BorderLayout.SOUTH);
     }
 
+    // Load all medicines from the database and populate the table with their details, including name, type, price, stock quantity, expiry date, and status.
     private void loadAll() {
         populateTable("SELECT name, medicine_type, price, quantity_in_stock, expiry_date " +
             "FROM medicines ORDER BY name", null);
     }
 
+    // Search for medicines based on the user's input in the search field, filtering by name or type, and populate the table with the matching results. If the search field is empty, load all medicines instead.
     private void search() {
         String q = searchField.getText().trim();
         if (q.isEmpty()) { loadAll(); return; }
@@ -80,6 +82,7 @@ public class StockCheckPanel extends JPanel {
             "%" + q + "%");
     }
 
+    // Populate the table with medicine data based on the provided SQL query and optional parameter for filtering. The method retrieves data from the database, calculates stock status, and updates the table model accordingly.
     private void populateTable(String sql, String param) {
         model.setRowCount(0);
         try {

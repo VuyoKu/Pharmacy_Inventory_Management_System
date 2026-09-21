@@ -74,18 +74,21 @@ CREATE TABLE sale_items (
     CONSTRAINT fk_item_sale
         FOREIGN KEY (sale_id) REFERENCES sales(sale_id)
         ON DELETE CASCADE,
-    CONSTRAINT fk_item_medicine
-        FOREIGN KEY (medicine_id) REFERENCES medicines(medicine_id)
-        ON DELETE SET NULL
+    CONSTRAINT fk_item_medicine -- gives the foreign key relationship the name fk_item_medicine
+        FOREIGN KEY (medicine_id) REFERENCES medicines(medicine_id) -- ensures that the medicine_id in the sale_items table must exist in the medicines table
+        ON DELETE SET NULL -- if a medicine is deleted, the medicine_id in the sale_items table will be set to NULL
 );
 
 -- seeding data used for testing purposes
 
--- seeding users table 
+-- seeding users table
+-- two admins and three cashiers, each with their own name
 INSERT INTO users (username, password, role, full_name) VALUES
-('admin',    'admin123',   'Admin',   'System Administrator'),
-('cashier',  'cash123',    'Cashier', 'Jane Dlamini'),
-('cashier2', 'cash456',    'Cashier', 'Sipho Nkosi');
+('admin',    'admin123',   'Admin',   'Naledi Khumalo'),
+('admin2',   'admin456',   'Admin',   'Johan Botha'),
+('cashier',  'cash123',    'Cashier', 'Palesa Mokoena'),
+('cashier2', 'cash456',    'Cashier', 'Ryan Govender'),
+('cashier3', 'cash789',    'Cashier', 'Zanele Mahlangu');
 
 -- seeding suppliers table
 INSERT INTO suppliers (name, contact_person, phone, email, address) VALUES
@@ -114,12 +117,13 @@ INSERT INTO medicines (name, company, medicine_type, price, quantity_in_stock, r
 ('Prednisone 5mg',         'Cipla Medpro',    'Tablet',    22.00,  70,   15, '2026-05-15', 3);
 
 -- seeding historical sales, for reports
+-- user_id 3 = Palesa Mokoena, 4 = Ryan Govender, 5 = Zanele Mahlangu
 INSERT INTO sales (sale_date, total_amount, user_id) VALUES
-('2025-06-01 09:15:00',  70.25, 2),
-('2025-06-02 11:30:00', 189.00, 2),
-('2025-06-03 14:00:00',  58.25, 3),
-('2025-06-04 10:45:00', 141.75, 2),
-('2025-06-05 16:20:00',  85.50, 3);
+('2025-07-11 08:42:00',  70.25, 3),
+('2025-07-12 13:05:00', 189.00, 4),
+('2025-07-13 16:50:00',  58.25, 5),
+('2025-07-14 09:20:00', 141.75, 3),
+('2025-07-15 17:35:00',  85.50, 4);
 
 INSERT INTO sale_items (sale_id, medicine_id, quantity_sold, price_at_sale) VALUES
 (1, 1, 2, 12.50),
