@@ -1,6 +1,13 @@
 package authenication;
 // imports from other packages/folders
 import utilities.UITheme;
+import utilities.SessionManager;
+
+import database_connection.db_con;
+import models.User;
+
+
+
 
 // imports of java libraries
 import javax.swing.*;
