@@ -46,7 +46,7 @@ public class LoginFrame extends JFrame{
         banner.setBackground(UITheme.PRIMARY);
         banner.setBorder(new EmptyBorder(24, 30, 24, 30));
 
-        JLabel logo = new JLabel("💊");
+        JLabel logo = new JLabel("❤️");
         logo.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 46));
         logo.setForeground(Color.WHITE);
         logo.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -119,7 +119,7 @@ public class LoginFrame extends JFrame{
         cardPanel.add(loginBtn);
         cardPanel.add(Box.createVerticalStrut(20));
 
-        JLabel hint = new JLabel("Default — Admin: admin / admin123   |   Cashier: cashier / cash123");
+        JLabel hint = new JLabel("Default — Admin: admin / admin123   |  Cashier: cashier / cash123");
         hint.setFont(new Font(UITheme.FONT_FAMILY, Font.ITALIC, 10));
         hint.setForeground(UITheme.TEXT_MUTED);
         hint.setAlignmentX(Component.CENTER_ALIGNMENT);
