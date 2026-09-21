@@ -12,33 +12,36 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 
 public class UITheme {
-    // color palette
-    public static final Color PRIMARY       = new Color(0, 102, 153);   // deep teal-blue
-    public static final Color PRIMARY_DARK  = new Color(0,  72, 110);
-    public static final Color PRIMARY_LIGHT = new Color(0, 140, 200);
+    // color palette (light pink theme)
+    public static final Color PRIMARY       = new Color(219, 39, 119);   // main pink
+    public static final Color PRIMARY_DARK  = new Color(157, 23, 77);    // darker pink (headers)
+    public static final Color PRIMARY_LIGHT = new Color(244, 114, 182);  // lighter pink
 
     public static final Color DANGER        = new Color(220, 53, 69);    // red
     public static final Color WARNING       = new Color(255, 193, 7);    // yellow/orange
     public static final Color SUCCESS       = new Color(40, 167, 69);    // green
-    public static final Color ACCENT        = new Color(23, 162, 184);   // cyan/teal
+    public static final Color ACCENT        = new Color(236, 72, 153);   // accent pink
 
-    public static final Color BG            = new Color(245, 248, 252);
+    public static final Color BG            = new Color(255, 240, 246);  // very light pink background
     public static final Color CARD_BG       = Color.WHITE;
-    public static final Color SIDEBAR_BG    = new Color(18,  52,  86);
-    public static final Color SIDEBAR_TEXT  = new Color(200, 220, 240);
-    public static final Color TABLE_HEADER  = new Color(0, 102, 153);
-    public static final Color TABLE_ALT     = new Color(235, 243, 252);
-    public static final Color TEXT_PRIMARY  = new Color(30,  40,  50);
-    public static final Color TEXT_MUTED    = new Color(110, 130, 150);
-    public static final Color BORDER_COLOR  = new Color(200, 215, 230);
+    public static final Color SIDEBAR_BG    = new Color(157, 23, 77);
+    public static final Color SIDEBAR_TEXT  = new Color(253, 224, 236);
+    public static final Color TABLE_HEADER  = new Color(219, 39, 119);
+    public static final Color TABLE_ALT     = new Color(253, 235, 244);
+    public static final Color TEXT_PRIMARY  = new Color(60,  30,  45);
+    public static final Color TEXT_MUTED    = new Color(150, 110, 130);
+    public static final Color BORDER_COLOR  = new Color(245, 200, 220);
 
 
-    // fonts 
-    public static final Font FONT_TITLE   = new Font("Segoe UI", Font.BOLD,  22);
-    public static final Font FONT_HEADING = new Font("Segoe UI", Font.BOLD,  15);
-    public static final Font FONT_LABEL   = new Font("Segoe UI", Font.PLAIN, 13);
-    public static final Font FONT_BOLD    = new Font("Segoe UI", Font.BOLD,  13);
-    public static final Font FONT_SMALL   = new Font("Segoe UI", Font.PLAIN, 11);
+    // fonts
+    // one shared font name used everywhere in the app.
+    public static final String FONT_FAMILY = "Segoe UI";
+
+    public static final Font FONT_TITLE   = new Font(FONT_FAMILY, Font.BOLD,  22);
+    public static final Font FONT_HEADING = new Font(FONT_FAMILY, Font.BOLD,  15);
+    public static final Font FONT_LABEL   = new Font(FONT_FAMILY, Font.PLAIN, 13);
+    public static final Font FONT_BOLD    = new Font(FONT_FAMILY, Font.BOLD,  13);
+    public static final Font FONT_SMALL   = new Font(FONT_FAMILY, Font.PLAIN, 11);
     public static final Font FONT_MONO    = new Font("Consolas",  Font.PLAIN, 13);
 
 
@@ -197,8 +200,8 @@ public class UITheme {
         });
     }
 
-    /* ── Panels ──────────────────────────────────────────────── */
-
+    // Panels 
+    // Create a reusable card-style panel with padding and border for form sections
     public static JPanel card(LayoutManager layout) {
         JPanel p = new JPanel(layout);
         p.setBackground(CARD_BG);
@@ -209,6 +212,7 @@ public class UITheme {
         return p;
     }
 
+    // Create a standard bold label used for form field names
     public static JLabel formLabel(String text) {
         JLabel l = new JLabel(text);
         l.setFont(FONT_BOLD);
