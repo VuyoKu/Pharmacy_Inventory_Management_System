@@ -98,11 +98,11 @@ public class AdminDashboard extends JFrame {
         sidebar.setPreferredSize(new Dimension(190, 0));
         sidebar.setBorder(new EmptyBorder(20, 12, 20, 12));
 
-        JButton homeBtn      = sidebarButton("🏠  Dashboard");
-        JButton medicineBtn  = sidebarButton("💊  Medicines");
-        JButton supplierBtn  = sidebarButton("🏭  Suppliers");
-        JButton userBtn      = sidebarButton("👤  Users");
-        JButton reportBtn    = sidebarButton("📊  Reports");
+        JButton homeBtn      = sidebarButton("Dashboard");
+        JButton medicineBtn  = sidebarButton("Medicines");
+        JButton supplierBtn  = sidebarButton("Suppliers");
+        JButton userBtn      = sidebarButton("Users");
+        JButton reportBtn    = sidebarButton("Reports");
 
         homeBtn.addActionListener(e -> contentLayout.show(contentArea, "HOME"));
         medicineBtn.addActionListener(e -> contentLayout.show(contentArea, "MEDICINES"));
